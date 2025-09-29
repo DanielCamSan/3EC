@@ -1,35 +1,45 @@
 ﻿using apiwithdb.Models;
+using apiwithdb.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace apiwithdb.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        private readonly List<Book> _books = new()
-        {
-            new Book { Id = Guid.NewGuid(), Title = "Clean Code", Year = 2008 },
-            new Book { Id = Guid.NewGuid(), Title = "Pragmatic Programmer", Year = 1999 },
-            new Book { Id = Guid.NewGuid(), Title = "Refactoring", Year = 1999 }
-        };
+        //private readonly List<Book> _books = new()
+        //{
+        //    new Book { Id = Guid.NewGuid(), Title = "Clean Code", Year = 2008 },
+        //    new Book { Id = Guid.NewGuid(), Title = "Pragmatic Programmer", Year = 1999 },
+        //    new Book { Id = Guid.NewGuid(), Title = "Refactoring", Year = 1999 }
+        //};
+        private readonly AppDbContext _context;
 
-
-        public void Add(Book book)
+        public BookRepository(AppDbContext context)
         {
-           _books.Add(book);
+            _context = context;
+        }
+        public async Task Add(Book book)
+        {
+           await _context.Books.AddAsync(book);
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-           _books.RemoveAll(b => b.Id == id);
+            var book = await _context.Books.FirstOrDefaultAsync(x => x.Id == id);
+            if (book != null)
+            {
+                _context.Books.Remove(book);
+            }
         }
 
-        public IEnumerable<Book> GetAll()
+        public async Task<IEnumerable<Book>> GetAll()
         {
-           return _books;
+           return await _context.Books.ToListAsync();
         }
 
-        public Book? GetById(Guid id)
+        public async Task<Book?>  GetById(Guid id)
         {
-            return _books.FirstOrDefault(b => b.Id == id);
+            return await _context.Books.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

@@ -4,9 +4,9 @@ namespace apiwithdb.Repositories
 {
     public interface IBookRepository
     {
-        IEnumerable<Book> GetAll();
-        Book? GetById(Guid id);
-        void Add(Book book);
-        void Delete(Guid id);
+        Task<IEnumerable<Book>> GetAll();
+        Task<Book?> GetById(Guid id);
+        Task Add(Book book);
+        Task Delete(Guid id);
     }
 }
