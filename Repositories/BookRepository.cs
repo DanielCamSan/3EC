@@ -1,16 +1,15 @@
-﻿using apiwithdb.Models;
+﻿using apiwithdb.Data;
+using apiwithdb.Models;
 
 namespace apiwithdb.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        private readonly List<Book> _books = new()
+        private readonly AppDbContext _context;
+        public BookRepository(AppDbContext context)
         {
-            new Book { Id = Guid.NewGuid(), Title = "Clean Code", Year = 2008 },
-            new Book { Id = Guid.NewGuid(), Title = "Pragmatic Programmer", Year = 1999 },
-            new Book { Id = Guid.NewGuid(), Title = "Refactoring", Year = 1999 }
-        };
-
+            _context = context;
+        }
 
         public void Add(Book book)
         {
