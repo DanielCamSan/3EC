@@ -2,12 +2,13 @@
 
 namespace apiwithdb.Models.dtos
 {
-    public record CreateBookDto
-    {
-        [Required, StringLength(200)]
-        public string Title { get; set; } = string.Empty;
+    public record CreateBookDto(
+        [Required, StringLength(200)] string Title,
+        [Range(0, 3000)] int Year,
+        [Required] Guid AuthorId   // 👈 aquí viene el link
+    );
 
-        [Range(1000, 2100)]
-        public int Year { get; set; }
-    }
+    public record UpdateBookAuthorDto(
+        [Required] Guid AuthorId    // para relinkear un libro existente
+    );
 }

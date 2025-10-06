@@ -9,5 +9,7 @@ namespace apiwithdb.Models
         public int Year { get; set; }
         public Guid? AuthorId { get; set; }
         public Author? Author { get; set; }
+
+        public ICollection<Tag> Tags { get; set; } = new List<Tag>();
     }
 }

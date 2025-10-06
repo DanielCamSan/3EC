@@ -7,9 +7,12 @@ namespace apiwithdb.Services
     public class BookService : IBookService
     {
         private readonly IBookRepository _repo;
-        public BookService(IBookRepository repo)
+        private readonly IAuthorRepository _authors;
+
+        public BookService(IBookRepository repo, IAuthorRepository authors)
         {
             _repo = repo;
+            _authors = authors;
         }
         public async Task<Book> Create(CreateBookDto dto)
         {
@@ -17,11 +20,15 @@ namespace apiwithdb.Services
             {
                 throw new InvalidOperationException("Year must be between 1900 and the current year.");
             }
+            var authorExists = await _authors.ExistsById(dto.AuthorId);
+            if (!authorExists)
+                throw new InvalidOperationException("Author not found.");
             var book = new Book
             {
                 Id = Guid.NewGuid(),
                 Title = dto.Title.Trim(),
-                Year = dto.Year
+                Year = dto.Year,
+                AuthorId = dto.AuthorId,
             };
             await _repo.Add(book);
             return book;

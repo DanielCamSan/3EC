@@ -24,13 +24,14 @@ namespace apiwithdb.Repositories
             if (book != null)
             {
                 _context.Books.Remove(book);
-                await _context.SaveChangesAsync();
+                  await _context.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<Book>> GetAll()
         {
-            return await _context.Books.ToListAsync();
+            return await _context.Books.AsNoTracking()
+        .Include(b => b.Author).ToListAsync();
         }
 
         public async Task<Book?> GetById(Guid id)

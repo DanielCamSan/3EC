@@ -1,4 +1,6 @@
 
+using apiwithdb.Repositories;
+using apiwithdb.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +18,8 @@ builder.Services.AddDbContext<apiwithdb.Data.AppDbContext>(opt =>
 
 builder.Services.AddScoped<apiwithdb.Repositories.IBookRepository, apiwithdb.Repositories.BookRepository>();
 builder.Services.AddScoped<apiwithdb.Services.IBookService, apiwithdb.Services.BookService>();
-
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
 var app = builder.Build();
 // Dependency Injection
 
