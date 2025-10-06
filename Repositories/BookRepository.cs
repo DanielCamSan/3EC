@@ -1,5 +1,6 @@
 ﻿using apiwithdb.Data;
 using apiwithdb.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace apiwithdb.Repositories
 {
@@ -11,24 +12,30 @@ namespace apiwithdb.Repositories
             _context = context;
         }
 
-        public void Add(Book book)
+        public async Task Add(Book book)
         {
-           _books.Add(book);
+            await _context.Books.AddAsync(book);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-           _books.RemoveAll(b => b.Id == id);
+            var book = await _context.Books.FirstOrDefaultAsync(x => x.Id == id);
+            if (book != null)
+            {
+                _context.Books.Remove(book);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public IEnumerable<Book> GetAll()
+        public async Task<IEnumerable<Book>> GetAll()
         {
-           return _books;
+            return await _context.Books.ToListAsync();
         }
 
-        public Book? GetById(Guid id)
+        public async Task<Book?> GetById(Guid id)
         {
-            return _books.FirstOrDefault(b => b.Id == id);
+            return await _context.Books.FirstOrDefaultAsync(x=> x.Id == id);
         }
     }
 }

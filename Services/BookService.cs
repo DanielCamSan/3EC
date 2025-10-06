@@ -11,7 +11,7 @@ namespace apiwithdb.Services
         {
             _repo = repo;
         }
-        public Book Create(CreateBookDto dto)
+        public async Task<Book> Create(CreateBookDto dto)
         {
             if(dto.Year<1900)
             {
@@ -23,26 +23,26 @@ namespace apiwithdb.Services
                 Title = dto.Title.Trim(),
                 Year = dto.Year
             };
-            _repo.Add(book);
+            await _repo.Add(book);
             return book;
         }
 
-        public bool Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            var existing = _repo.GetById(id);
+            var existing = await _repo.GetById(id);
             if (existing == null) return false;
-            _repo.Delete(id);
+            await _repo.Delete(id);
             return true;
         }
 
-        public IEnumerable<Book> GetAll()
+        public async Task<IEnumerable<Book>> GetAll()
         {
-            return _repo.GetAll();
+            return await _repo.GetAll();
         }
 
-        public Book? GetById(Guid id)
+        public async Task<Book?> GetById(Guid id)
         {
-            var book = _repo.GetById(id);
+            var book = await _repo.GetById(id);
             return book;
         }
     }

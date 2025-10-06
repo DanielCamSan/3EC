@@ -15,32 +15,33 @@ namespace apiwithdb.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_service.GetAll());
+            var items = await _service.GetAll();
+            return Ok(items);
         }
 
         [HttpGet("{id:guid}")]
-        public IActionResult GetOne(Guid id)
+        public async Task<IActionResult> GetOne(Guid id)
         {
-            var book = _service.GetById(id);
+            var book = await _service.GetById(id);
             return book == null
                 ? NotFound(new { error = "Book not found", status = 404 })
                 : Ok(book);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateBookDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateBookDto dto)
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
-            var book = _service.Create(dto);
+            var book = await _service.Create(dto);
             return CreatedAtAction(nameof(GetOne), new { id = book.Id }, book);
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult Delete(Guid id)
+        public async Task <IActionResult> Delete(Guid id)
         {
-            var success = _service.Delete(id);
+            var success = await _service.Delete(id);
             return success
                 ? NoContent()
                 : NotFound(new { error = "Book not found", status = 404 });
