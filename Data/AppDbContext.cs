@@ -54,7 +54,18 @@ namespace apiwithdb.Data
                    je.HasIndex("TagId");         // índice de apoyo
                });
 
+            modelBuilder.Entity<AuthorProfile>(profile =>
+            {
+                profile.HasKey(p => p.Id); // PK = FK
+                profile.Property(p => p.Biography).HasMaxLength(1000);
+                profile.Property(p => p.Website).HasMaxLength(200);
 
+                // Configuración 1:1 (clave compartida)
+                profile.HasOne(p => p.Author)
+                       .WithOne(a => a.Profile)
+                       .HasForeignKey<AuthorProfile>(p => p.Id)
+                       .OnDelete(DeleteBehavior.Cascade); // o Restrict si prefieres evitar borrados en cascada
+            });
         }
     }
 }
